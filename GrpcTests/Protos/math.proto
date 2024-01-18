@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcTests";
+
+package math;
+
+service Math {
+	rpc Calculate(MathRequest) returns (MathResponse);
+}
+
+message MathRequest {
+	int32 a = 1;
+	int32 b = 2;
+	Operation operation = 3;
+}
+
+enum Operation {
+	Add = 0;
+	Multiply = 1;
+}
+
+message MathResponse {
+	int32 result = 1;
+}
