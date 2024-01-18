@@ -1,3 +1,5 @@
+using GrpcTests;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +8,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddGrpc(options => options.EnableDetailedErrors = true);
 
 var app = builder.Build();
 
@@ -21,5 +25,17 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseRouting();
+
+app.UseEndpoints((endpoints) =>
+{
+    endpoints.MapGrpcService<MathService>();
+
+    endpoints.MapGet("/", async context =>
+    {
+        await context.Response.WriteAsync("Communication with GRPC endpoints must be made via grpc client");
+    });
+});
 
 app.Run();
